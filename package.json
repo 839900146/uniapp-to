@@ -7,7 +7,16 @@
   "author": {
     "name": "黄某",
     "email": "839900146@qq.com",
-    "url": "https://github.com/839900146/uniapp-fs.git"
+    "url": "https://github.com/839900146/uniapp-to.git"
+  },
+  "homepage": "https://github.com/839900146/uniapp-to.git",
+  "bugs": {
+    "url": "https://github.com/839900146/uniapp-to/issues",
+    "email": "839900146@qq.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/839900146/uniapp-to.git"
   },
   "license": "MIT"
 }
