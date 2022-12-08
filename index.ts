@@ -17,31 +17,60 @@ export type TOptions = {
     fail: (error: unknown) => any
 }
 
+const parse = (url = '') => {
+    let arr = url.split('?')?.pop()?.split('=')?.filter(Boolean)
+    let kv = {} as Record<any, unknown>
+    if (Array.isArray(arr)) {
+        for (let i = 0; i < arr.length; i++) {
+            let [k, v] = arr[i].split('=')
+            kv[k] = v
+        }
+    }
+    return kv
+}
+
+const stringify = (params: Record<any, any>) => {
+    let arr = [] as string[]
+    for (const key in params) {
+        if (Object.prototype.hasOwnProperty.call(params, key)) {
+            arr.push(`${key}=${params[key]}`)
+        }
+    }
+    return arr.join('&')
+}
+
 export const to = (url?: string, options?: Partial<TOptions>) => {
 
-    const success = options?.success || function() {}
-    const fail = options?.fail || function() {}
+    const success = options?.success || function () { }
+    const fail = options?.fail || function () { }
+
+    // 提取路径参数
+    let urlParams = parse(url)
+    // 合并路径参数
+    if(Object.keys(urlParams).length > 0) {
+        url = url?.split('?').shift()
+        if(options?.params) {
+            Object.assign(options.params, urlParams)
+        } else if (options) {
+            options.params = urlParams
+        }
+    }
 
     // 不传递url则认为是回退
     if (!url) {
         if (getCurrentPages().length === 1) {
             to('/', { clear: true })
             return
-         }
- 
-         uni.navigateBack({ delta: options?.delta || 1, success, fail })
-         return
+        }
+
+        uni.navigateBack({ delta: options?.delta || 1, success, fail })
+        return
     }
 
     // 处理路径传参
-    if(url && options?.params) {
-        let arr = [] as string[]
-        for (const key in options.params) {
-            if (Object.prototype.hasOwnProperty.call(options.params, key)) {
-                arr.push(`${key}=${options.params[key]}`)
-            }
-        }
-        if(arr.length > 0) url += `?${arr.join('&')}`
+    if (url && options?.params) {
+        let str = stringify(options?.params)
+        if (str.length > 0) url += `?${str}`
     }
 
     // 等价于reLaunch
@@ -66,7 +95,7 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
     // 判断当前页面栈是否已满
     let pages = getCurrentPages()
 
-    if(pages.length >= 10) {
+    if (pages.length >= 10) {
         uni.redirectTo({ url, success, fail })
     } else {
         uni.navigateTo({ url, events: options?.events || {}, success, fail })
