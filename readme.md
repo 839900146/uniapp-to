@@ -62,12 +62,17 @@ to('/aaa/bbb', { replace: true })
 to('/aaa/bbb', { clear: true })
 ```
 
-6. 跳转页面并传参
+6. 跳转至tabbar页面
+```ts
+to('/aaa/bbb', { switch: true })
+```
+
+7. 跳转页面并传参
 ```ts
 to('/aaa/bbb', { params: {a: 1, b: 2, c: 3} })
 ```
 
-7. 设置事件监听对象并跳转页面
+8. 设置事件监听对象并跳转页面
 ```ts
 to('/aaa/bbb', {
     events: {
@@ -78,7 +83,7 @@ to('/aaa/bbb', {
 })
 ```
 
-8. 跳转页面并监听成功与失败
+9. 跳转页面并监听成功与失败
 ```ts
 to('/aaa/bbb', {
     success: () => {},
@@ -91,5 +96,6 @@ to('/aaa/bbb', {
 1. options参数可以组合使用
 2. 如果不传递url，则为回退页面
 3. 回退页面时不支持传递 `params` 
-4. `clear` 优先级比 `replace` 高，若两者同时写，则默认执行 `clear`
-5. 若达到最大页面栈时，会采用 `replace` 方式继续跳转，好处是页面可以一直跳转下去，坏处是无法退回到上一个页面
+4. `clear` 优先级比 `switch` 高，若两者同时写，则默认执行 `clear`
+5. `switch` 优先级比 `replace` 高，若两者同时写，则默认执行 `switch`
+6. 若达到最大页面栈时，会采用 `replace` 方式继续跳转，好处是页面可以一直跳转下去，坏处是无法退回到上一个页面

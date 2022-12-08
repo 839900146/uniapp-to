@@ -5,6 +5,8 @@ export type TOptions = {
     delta: number,
     /** 等价于reLaunch */
     clear: boolean,
+    /** 等价于switchTab */
+    switch: boolean,
     /** 事件列表 */
     events: Record<any, any>,
     /** 需要传递的参数 */
@@ -22,8 +24,13 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
 
     // 不传递url则认为是回退
     if (!url) {
-        uni.navigateBack({ delta: options?.delta || 1, success, fail })
-        return
+        if (getCurrentPages().length === 1) {
+            to('/', { clear: true })
+            return
+         }
+ 
+         uni.navigateBack({ delta: options?.delta || 1, success, fail })
+         return
     }
 
     // 处理路径传参
@@ -40,6 +47,12 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
     // 等价于reLaunch
     if (options?.clear && url) {
         uni.reLaunch({ url, success, fail })
+        return
+    }
+
+    // 跳转tabbar页
+    if (options?.switch && url) {
+        uni.switchTab({ url, success, fail })
         return
     }
 
