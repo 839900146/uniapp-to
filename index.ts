@@ -53,6 +53,10 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
             Object.assign(options.params, urlParams)
         } else if (options) {
             options.params = urlParams
+        } else {
+            options = {
+                params: urlParams
+            }
         }
     }
 

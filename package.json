@@ -1,6 +1,6 @@
 {
   "name": "uniapp-to",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "基于uniapp的路由跳转封装，兼容微信/头条小程序、H5、APP",
   "main": "index.ts",
   "keywords": ["uniapp-fs", "uniapp", "fs", "miniprogram", "vue2", "vue3", "h5", "app"],
