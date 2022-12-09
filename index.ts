@@ -18,7 +18,7 @@ export type TOptions = {
 }
 
 const parse = (url = '') => {
-    let arr = url.split('?')?.pop()?.split('=')?.filter(Boolean)
+    let arr = url.split('?')?.pop()?.split('&')?.filter(Boolean)
     let kv = {} as Record<any, unknown>
     if (Array.isArray(arr)) {
         for (let i = 0; i < arr.length; i++) {
