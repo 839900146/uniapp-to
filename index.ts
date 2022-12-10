@@ -18,15 +18,19 @@ export type TOptions = {
 }
 
 const parse = (url = '') => {
-    let arr = url.split('?')?.pop()?.split('&')?.filter(Boolean)
-    let kv = {} as Record<any, unknown>
-    if (Array.isArray(arr)) {
-        for (let i = 0; i < arr.length; i++) {
-            let [k, v] = arr[i].split('=')
-            kv[k] = v
+    if(/\?/.test(url)) {
+        let arr = url.split('?')?.pop()?.split('&')?.filter(Boolean)
+        let kv = {} as Record<any, unknown>
+        if (Array.isArray(arr)) {
+            for (let i = 0; i < arr.length; i++) {
+                let [k, v] = arr[i].split('=')
+                kv[k] = v
+            }
         }
+        return kv
+    } else{
+        return {}
     }
-    return kv
 }
 
 const stringify = (params: Record<any, any>) => {
