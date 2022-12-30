@@ -108,19 +108,8 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
             return
         }
 
-        // 跳转微信小程序
-        if (options?.miniPrograme && options?.id) {
-            wx.navigateToMiniProgram({
-                appId: options.id,
-                path: url,
-                extraData: options?.params || {},
-                success,
-                fail
-            })
-        }
-
         // 跳转视频号主页
-        if(options?.videoIndex && options?.id) {
+        if (options?.videoIndex && options?.id) {
             wx.openChannelsUserProfile({
                 finderUserName: options.id,
                 success,
@@ -131,6 +120,17 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
         // 回到上一页
         uni.navigateBack({ delta: options?.delta || 1, success, fail })
         return
+    }
+
+    // 跳转微信小程序
+    if (options?.miniPrograme && options?.id) {
+        wx.navigateToMiniProgram({
+            appId: options.id,
+            path: url,
+            extraData: options?.params || {},
+            success,
+            fail
+        })
     }
 
     // 等价于reLaunch
