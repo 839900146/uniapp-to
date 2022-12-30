@@ -131,6 +131,7 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
             success,
             fail
         })
+        return;
     }
 
     // 等价于reLaunch
