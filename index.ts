@@ -1,4 +1,14 @@
 export type TOptions = {
+    /** id，可以是视频号id、小程序AppID */
+    id: string
+    /** 跳转微信小程序 */
+    miniPrograme: boolean
+    /** 回到上一个小程序 */
+    backPrograme: boolean
+    /** 退出小程序 */
+    exitPrograme: boolean
+    /** 跳转视频号主页 */
+    videoIndex: boolean
     /** 等价于redirect */
     replace: boolean,
     /** 回退的页面数量 */
@@ -17,8 +27,9 @@ export type TOptions = {
     fail: (error: unknown) => any
 }
 
+/** 解析路径参数 */
 const parse = (url = '') => {
-    if(/\?/.test(url)) {
+    if (/\?/.test(url)) {
         let arr = url.split('?')?.pop()?.split('&')?.filter(Boolean)
         let kv = {} as Record<any, unknown>
         if (Array.isArray(arr)) {
@@ -28,11 +39,12 @@ const parse = (url = '') => {
             }
         }
         return kv
-    } else{
+    } else {
         return {}
     }
 }
 
+/** 生成路径参数 */
 const stringify = (params: Record<any, any>) => {
     let arr = [] as string[]
     for (const key in params) {
@@ -50,10 +62,11 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
 
     // 提取路径参数
     let urlParams = parse(url)
+
     // 合并路径参数
-    if(Object.keys(urlParams).length > 0) {
+    if (Object.keys(urlParams).length > 0) {
         url = url?.split('?').shift()
-        if(options?.params) {
+        if (options?.params) {
             Object.assign(options.params, urlParams)
         } else if (options) {
             options.params = urlParams
@@ -64,21 +77,60 @@ export const to = (url?: string, options?: Partial<TOptions>) => {
         }
     }
 
+    // 处理路径传参
+    if (url && options?.params) {
+        let str = stringify(options?.params)
+        if (str.length > 0) url += `?${str}`
+    }
+
     // 不传递url则认为是回退
     if (!url) {
+
+        // 退出小程序
+        if (options?.exitPrograme) {
+            wx.exitMiniProgram({ success, fail })
+            return
+        }
+
+        // 回到首页
         if (getCurrentPages().length === 1) {
             to('/', { clear: true })
             return
         }
 
+        // 退回上一个小程序
+        if (options?.backPrograme) {
+            wx.navigateBackMiniProgram({
+                extraData: options?.params || {},
+                success,
+                fail
+            })
+            return
+        }
+
+        // 跳转微信小程序
+        if (options?.miniPrograme && options?.id) {
+            wx.navigateToMiniProgram({
+                appId: options.id,
+                path: url,
+                extraData: options?.params || {},
+                success,
+                fail
+            })
+        }
+
+        // 跳转视频号主页
+        if(options?.videoIndex && options?.id) {
+            wx.openChannelsUserProfile({
+                finderUserName: options.id,
+                success,
+                fail
+            })
+        }
+
+        // 回到上一页
         uni.navigateBack({ delta: options?.delta || 1, success, fail })
         return
-    }
-
-    // 处理路径传参
-    if (url && options?.params) {
-        let str = stringify(options?.params)
-        if (str.length > 0) url += `?${str}`
     }
 
     // 等价于reLaunch
