@@ -104,10 +104,10 @@ to('/aaa/bbb', {
 10. **跳转微信小程序**
 ```ts
 // 跳转小程序的pages/Home/Home页面
-to('pages/Home/Home', { id: 'appId', miniProgram: true })
+to('pages/Home/Home', { id: 'appId', miniPrograme: true })
 
 // 跳转小程序的pages/Home/Home页面并传递参数
-to('pages/Home/Home', { id: 'appId', miniProgram: true, params: { a: 1 } })
+to('pages/Home/Home', { id: 'appId', miniPrograme: true, params: { a: 1 } })
 ```
 
 11. **回到上一个小程序**
