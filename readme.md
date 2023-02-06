@@ -141,6 +141,8 @@ EventQueue.register(fn1)
 EventQueue.register([fn1])
 // 注册事件 - 方式3 传递一个方法对象
 EventQueue.register({ fn2: fn1 })
+// 注册事件 - 方法4 传递一个匿名函数
+EventQueue.register(() => {})
 ```
 
 
@@ -163,6 +165,17 @@ EventQueue.excute('fn2').then(res => console.log(res))
 (async () => {
     // 可以传递参数，excute后续的所有参数，都将传递给事件队列中所执行的方法
     let res = await EventQueue.excute('fn2', 111, 'aaa', {a: 1, b: 2})
+    console.log(res)
+})()
+
+// 执行匿名函数，不传入方法名就是执行匿名函数，并且把所有匿名函数全部执行
+// 1. 执行所有匿名函数
+EventQueue.excute()
+// 2. 执行所有匿名函数并传参
+EventQueue.excute(null, {a: 1, b: 2}, 3)
+// 3. 执行所有匿名函数并得到所有执行结果
+(async () => {
+    let res = await EventQueue.excute(null, {a: 1, b: 2}, 3)
     console.log(res)
 })()
 ```
