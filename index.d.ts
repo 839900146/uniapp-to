@@ -6,6 +6,8 @@ declare module 'vue/types/vue' {
     }
 }
 
+export type TEventHandle = (...args: any[]) => void
+
 export type ToOption = {
     /** id，可以是视频号id、小程序AppID */
     id: string

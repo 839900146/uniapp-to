@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { ToOption, TConfig } from "."
+import { ToOption, TConfig } from "./index.d"
+export { EventQueue } from './event'
 
 /** 解析路径参数 */
 function parse(url = ''): Record<any, any> {
@@ -134,9 +135,12 @@ function handleHaveUrl(config: TConfig) {
     // #endif
 }
 
+/** 主方法 */
 export async function to(url?: string, opt?: ToOption) {
     let config = createConfig(url, opt)
     config.url ? handleHaveUrl(config) : handleNoUrl(config)
 }
 
 export const $to = to
+
+export default to
