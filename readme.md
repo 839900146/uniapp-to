@@ -34,8 +34,6 @@ type to = (url?: string, options?: Partial<{
     delta: number,
     /** 等价于reLaunch */
     clear: boolean,
-    /** 事件列表 */
-    events: Record<any, any>,
     /** 需要传递的参数 */
     params: Record<any, any>,
     /** 成功函数 */
@@ -82,18 +80,7 @@ to('/aaa/bbb', { switch: true })
 to('/aaa/bbb', { params: {a: 1, b: 2, c: 3} })
 ```
 
-8. **设置事件监听对象并跳转页面**
-```ts
-to('/aaa/bbb', {
-    events: {
-        test: (res) => {
-            console.log(res)
-        }
-    }
-})
-```
-
-9. **跳转页面并监听成功与失败**
+8. **跳转页面并监听成功与失败**
 ```ts
 to('/aaa/bbb', {
     success: () => {},
@@ -101,7 +88,7 @@ to('/aaa/bbb', {
 })
 ```
 
-10. **跳转微信小程序**
+9.  **跳转微信小程序**
 ```ts
 // 跳转小程序的pages/Home/Home页面
 to('pages/Home/Home', { id: 'appId', miniPrograme: true })
@@ -110,7 +97,7 @@ to('pages/Home/Home', { id: 'appId', miniPrograme: true })
 to('pages/Home/Home', { id: 'appId', miniPrograme: true, params: { a: 1 } })
 ```
 
-11. **回到上一个小程序**
+10. **回到上一个小程序**
 ```ts
 // 直接退回上一个小程序
 to(null, { backPrograme: true })
@@ -119,14 +106,9 @@ to(null, { backPrograme: true })
 to(null, { backPrograme: true, params: { a: 1 } })
 ```
 
-12. **退出小程序**
+11. **退出小程序**
 ```ts
 to(null, { exitPrograme: true })
-```
-
-13. **跳转视频号主页**
-```ts
-to(null, { id: 'videoId', videoIndex: true })
 ```
 
 
@@ -138,5 +120,5 @@ to(null, { id: 'videoId', videoIndex: true })
 4. `clear` 优先级比 `switch` 高，若两者同时写，则默认执行 `clear`
 5. `switch` 优先级比 `replace` 高，若两者同时写，则默认执行 `switch`
 6. 若达到最大页面栈时，会采用 `replace` 方式继续跳转，好处是页面可以一直跳转下去，坏处是无法退回到上一个页面
-7. `退回上一页`、`退出小程序`、`回退上一个小程序`、`跳转小程序`、`跳转视频号` 不需要传递`url`参数
-8. `跳转小程序`、`跳转视频号` 需要传递id
+7. `退回上一页`、`退出小程序`、`回退上一个小程序`、`跳转小程序`不需要传递`url`参数
+8. `跳转小程序`需要传递id
