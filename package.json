@@ -4,14 +4,15 @@
   "description": "基于uniapp的路由跳转封装，兼容微信/头条小程序、H5、APP",
   "main": "./index.ts",
   "keywords": [
-    "uniapp-fs",
+    "uniapp-to",
     "uniapp",
-    "fs",
+    "router",
     "miniprogram",
     "vue2",
     "vue3",
     "h5",
-    "app"
+    "app",
+    "byte"
   ],
   "author": {
     "name": "黄某",
