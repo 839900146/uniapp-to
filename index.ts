@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { ToOption, TConfig } from "./index.d"
 import { EventQueue } from "./event"
+import { applyPlugins, usePlugins } from "./plugin"
+export { TPlugin } from './index.d'
 
 /** 解析路径参数 */
 function parse(url = ''): Record<any, any> {
@@ -10,7 +12,7 @@ function parse(url = ''): Record<any, any> {
         if (Array.isArray(arr)) {
             for (let i = 0; i < arr.length; i++) {
                 let [k, v] = arr[i].split('=')
-                kv[k] = v
+                kv[k] = decodeURIComponent(v)
             }
         }
         return kv
@@ -24,7 +26,7 @@ function stringify(params: Record<any, any>) {
     let arr = [] as string[]
     for (const key in params) {
         if (Object.prototype.hasOwnProperty.call(params, key)) {
-            arr.push(`${key}=${params[key]}`)
+            arr.push(`${key}=${encodeURIComponent(params[key])}`)
         }
     }
     return arr.join('&')
@@ -32,6 +34,8 @@ function stringify(params: Record<any, any>) {
 
 /** 生成参数配置 */
 function createConfig(url?: string, opt?: ToOption): TConfig {
+    let success = opt?.success || function () { }
+    let fail = opt?.fail || function () { }
     try {
         // 提取路径参数
         let urlParams = parse(url)
@@ -50,11 +54,15 @@ function createConfig(url?: string, opt?: ToOption): TConfig {
         }
         return {
             ...config,
-            url: url?.split('?').shift()
+            url: url?.split('?').shift(),
+            success,
+            fail,
         }
     } catch (error) {
         return {
-            params: {}
+            params: {},
+            success,
+            fail,
         }
     }
 }
@@ -138,7 +146,8 @@ function handleHaveUrl(config: TConfig) {
 /** 主方法 */
 export async function to(url?: string, opt?: ToOption) {
     let config = createConfig(url, opt)
-    if(config.events) EventQueue.register(config.events)
+    if (config.events) EventQueue.register(config.events)
+    if (await applyPlugins(config)) return
     config.url ? handleHaveUrl(config) : handleNoUrl(config)
 }
 
@@ -146,4 +155,6 @@ export const $to = to
 
 export default to
 
-export { EventQueue }
+export const excute = EventQueue.excute
+
+export { usePlugins }

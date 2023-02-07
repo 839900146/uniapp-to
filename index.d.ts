@@ -33,9 +33,12 @@ export type ToOption = {
     success: () => any,
     /** 失败函数 */
     fail: (error: unknown) => any,
+    [propName: string]: any
 }
 
 export type TConfig = {
     url?: string
     params: Record<any, any>
 } & Partial<ToOption>
+
+export type TPlugin = (config: TConfig) => boolean | Promise<(config: TConfig) => boolean>

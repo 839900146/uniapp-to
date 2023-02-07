@@ -38,6 +38,8 @@ type to = (url?: string, options?: Partial<{
     clear: boolean,
     /** 需要传递的参数 */
     params: Record<any, any>,
+    /** 事件列表 */
+    events: Record<string, (...args: any[]) => any | Promise<(...args: any[]) => any>>,
     /** 成功函数 */
     success: () => any,
     /** 失败函数 */
@@ -113,6 +115,30 @@ to(null, { backPrograme: true, params: { a: 1 } })
 to(null, { exitPrograme: true })
 ```
 
+12. **事件机制**
+```ts
+to('/aaa/bbb', {
+    events: {
+        a: () => {},
+        b: async () => {}
+    }
+})
+
+// 在/aaa/bbb页面
+import { excute } from 'uniapp-to'
+// 执行事件a
+excute('a')
+// 执行事件b并传递参数
+excute('b', 1, 2, 3)
+// 执行同步事件并获取返回值
+let res1 = excute('a')
+// 执行异步事件并获取返回值
+(async () => {
+ let res2 = await excute('b', 1, 2, 3)
+})()
+```
+
+
 
 ## 注意事项
 
@@ -126,57 +152,29 @@ to(null, { exitPrograme: true })
 8. `跳转小程序`需要传递id
 
 
-## 事件队列
-内置事件队列功能，开发者可以注册对应的事件方法并在任意时间去触发它，使用场景如跨页面通信等
+## 插件机制
+内置插件实现机制，使用方式如下
 
-### 注册事件
-往事件队列中添加执行方法，添加的方法可以是同步的，也可以是异步的
+### 注册插件
 ```ts
-import { EventQueue } from 'uniapp-to'
+import { usePlugins, TPlugin } from 'uniapp-to'
 
-let fn1 = () => {}
-// 注册事件 - 方式1 直接传递方法
-EventQueue.register(fn1)
-// 注册事件 - 方式2 传递一个方法数组
-EventQueue.register([fn1])
-// 注册事件 - 方式3 传递一个方法对象
-EventQueue.register({ fn2: fn1 })
-// 注册事件 - 方法4 传递一个匿名函数
-EventQueue.register(() => {})
+// 定义插件
+const myPlugin = (config: TPlugin) => {
+    console.log('plugin config', config)
+    if(config.url.startWith('/aaa')) {
+        uni.replace(config.url)
+        return true
+    }
+}
+
+// 注册插件
+usePlugins(myPlugin)
 ```
 
-
-### 注册事件
-通过调用 `excute` 并传入方法名即可完成调用
-
-**当方法成功调用后，该方法将会被移出事件队列**
-
+### 插件类型定义
 ```ts
-// 执行事件，可以在任意地方执行事件队列中的方法
-import { EventQueue } from 'uniapp-to'
-
-// 执行事件fn1
-EventQueue.excute('fn1')
-
-// 执行事件fn2
-EventQueue.excute('fn2').then(res => console.log(res))
-
-// 执行事件fn2
-(async () => {
-    // 可以传递参数，excute后续的所有参数，都将传递给事件队列中所执行的方法
-    let res = await EventQueue.excute('fn2', 111, 'aaa', {a: 1, b: 2})
-    console.log(res)
-})()
-
-// 执行匿名函数，不传入方法名就是执行匿名函数，并且把所有匿名函数全部执行
-// 1. 执行所有匿名函数
-EventQueue.excute()
-// 2. 执行所有匿名函数并传参
-EventQueue.excute(null, {a: 1, b: 2}, 3)
-// 3. 执行所有匿名函数并得到所有执行结果
-(async () => {
-    let res = await EventQueue.excute(null, {a: 1, b: 2}, 3)
-    console.log(res)
-})()
+type TPlugin = (config: TConfig) => boolean | Promise<(config: TConfig) => boolean>
 ```
-> 执行excute必须传递方法名
+
+- 如果插件方法执行完毕后有返回值且为 `true`，则将不再执行内置的后续逻辑，也就是说，后续的跳转方法将必须由该插件自身实现
