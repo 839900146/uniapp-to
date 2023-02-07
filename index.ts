@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { ToOption, TConfig } from "./index.d"
+import { ToOption, TConfig } from "./types/types.d"
 import { EventQueue } from "./event"
 import { applyPlugins, usePlugins } from "./plugin"
-export { TPlugin } from './index.d'
+export type { TPlugin } from './types/types'
 
 /** 解析路径参数 */
 function parse(url = ''): Record<any, any> {

@@ -1,4 +1,4 @@
-import { TPlugin, TConfig } from "./index.d"
+import { TPlugin, TConfig } from "./types/types"
 
 const plugins: TPlugin[] = []
 

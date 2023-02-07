@@ -1,14 +1,8 @@
-import { to } from './index'
-
-declare module 'vue/types/vue' {
-    interface Vue {
-        $to: typeof to
-    }
-}
+import { EventQueue } from "../event"
 
 export type TEventHandle = (...args: any[]) => void
 
-export type ToOption = {
+export type ToOption = Partial<{
     /** id，可以是视频号id、小程序AppID */
     id: string
     /** 跳转微信小程序 */
@@ -34,11 +28,15 @@ export type ToOption = {
     /** 失败函数 */
     fail: (error: unknown) => any,
     [propName: string]: any
-}
+}>
 
 export type TConfig = {
     url?: string
     params: Record<any, any>
-} & Partial<ToOption>
+} & ToOption
 
 export type TPlugin = (config: TConfig) => boolean | Promise<(config: TConfig) => boolean>
+
+export const excute: typeof EventQueue.excute
+
+export {}

@@ -1,4 +1,4 @@
-import { TEventHandle } from "./index.d"
+import { TEventHandle } from "./types/types"
 
 export const EventQueue = {
     queue: new Map<any, TEventHandle>(),

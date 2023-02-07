@@ -7,13 +7,29 @@
 - 简化原生api复杂度
 
 ## 用法
-```ts
-// 1. 通过import导入
-import { to } from 'uniapp-to'
-// 或 import { $to } from 'uniapp-to'
-// 或 import to from 'uniapp-to'
 
-// 2. 在组件实例中使用(vue2)
+打开 main.ts，写入下面代码
+```ts
+import Vue from 'vue'
+import toPlugin from 'uniapp-to/to-plugin'
+
+// 重点是这一行
+Vue.use(toPlugin())
+
+// ....
+```
+
+接下来就可以在页面中使用了，主要有2种使用方式：
+
+### 直接导入型
+```ts
+import { to } from 'uniapp-to'
+import { $to } from 'uniapp-to'
+import to from 'uniapp-to'
+```
+
+### 原型访问型
+```ts
 this.$to
 ```
 
@@ -130,13 +146,12 @@ import { excute } from 'uniapp-to'
 excute('a')
 // 执行事件b并传递参数
 excute('b', 1, 2, 3)
-// 执行同步事件并获取返回值
-let res1 = excute('a')
-// 执行异步事件并获取返回值
+// 执行事件并获取返回值
 (async () => {
- let res2 = await excute('b', 1, 2, 3)
+ let res1 = await excute('b', 1, 2, 3)
 })()
 ```
+>**注意**：所有事件都会被包装成异步方法，因此如果需要等待执行结果，则需要在 excute 前跟上 `await`
 
 
 
@@ -156,20 +171,22 @@ let res1 = excute('a')
 内置插件实现机制，使用方式如下
 
 ### 注册插件
+打开 `main.ts` ，定义一个插件方法
 ```ts
 import { usePlugins, TPlugin } from 'uniapp-to'
 
 // 定义插件
 const myPlugin = (config: TPlugin) => {
-    console.log('plugin config', config)
-    if(config.url.startWith('/aaa')) {
-        uni.replace(config.url)
-        return true
+    if (conf.url?.startsWith('/pages/demo')) {
+        // 如果访问的路径是/pages/demo开头，则不跳转，而是刷新页面
+        window.location.reload()
+        return true // 返回true代表终止后续所有步骤
     }
+    return false // 返回false代表正常执行后续逻辑
 }
 
-// 注册插件
-usePlugins(myPlugin)
+// 注册插件，可以注册多个，都写在数组里
+Vue.use(usePlugins([myPlugin]))
 ```
 
 ### 插件类型定义
@@ -178,3 +195,30 @@ type TPlugin = (config: TConfig) => boolean | Promise<(config: TConfig) => boole
 ```
 
 - 如果插件方法执行完毕后有返回值且为 `true`，则将不再执行内置的后续逻辑，也就是说，后续的跳转方法将必须由该插件自身实现
+
+
+## 常见问题
+
+### ts报错 `this.$to` 在实例上不存在
+这是因为项目里没有检索对应的类型声明，解决方案是在项目根目录下创建一个 `global.d.ts` ，当然，文件名你可以随便定，然后写入以下内容
+```ts
+import { to } from 'uniapp-to/index'
+
+declare module 'vue/types/vue' {
+    interface Vue {
+        $to: typeof to
+    }
+}
+```
+
+
+### 编译时控制台输出 `this.$to` 不存在之类的
+这个问题应该是vue2才会提示，在用vue2+ts时，组件的写法应当这么写：
+```ts
+// 采用Vue.extends才会拥有ts类型提示的支持
+import Vue from 'vue'
+
+export default Vue.extend({
+    data(){}
+})
+```
