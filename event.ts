@@ -35,10 +35,14 @@ export const EventQueue = {
             let applys: any[] = []
             for (const [name, cb] of EventQueue.queue.entries()) {
                 if(name?.startsWith?.('__no_name__')) {
-                    applys.push(new Promise((resolve) => {
-                        let v = cb.apply(null, args)
-                        resolve(v)
-                        EventQueue.queue.delete(name)
+                    applys.push(new Promise(async (resolve, reject) => {
+                        try {
+                            let v = await cb.apply(null, args)
+                            resolve(v)
+                            EventQueue.queue.delete(name)
+                        } catch (error) {
+                            reject(error)
+                        }
                     }))
                 }
             }

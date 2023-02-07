@@ -26,7 +26,7 @@ export type ToOption = {
     /** 等价于reLaunch */
     clear: boolean,
     /** 事件列表 */
-    events: Record<any, any>,
+    events: Record<string, (...args: any[]) => any | Promise<(...args: any[]) => any>>,
     /** 需要传递的参数 */
     params: Record<any, any>,
     /** 成功函数 */
