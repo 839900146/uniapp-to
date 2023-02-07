@@ -23,7 +23,6 @@ Vue.use(toPlugin())
 
 ### 直接导入型
 ```ts
-import { to } from 'uniapp-to'
 import { $to } from 'uniapp-to'
 import to from 'uniapp-to'
 ```
