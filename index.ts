@@ -110,19 +110,19 @@ function handleHaveUrl(config: TConfig) {
     }
 
     // 等价于reLaunch
-    if (config?.clear && url) {
+    if (config?.clear) {
         uni.reLaunch(config)
         return
     }
 
     // 跳转tabbar页
-    if (config?.switch && url) {
+    if (config?.switch) {
         uni.switchTab(config)
         return
     }
 
     // 采用replace方式
-    if (config?.replace && url) {
+    if (config?.replace) {
         uni.redirectTo(config)
         return
     }
