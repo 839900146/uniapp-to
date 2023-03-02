@@ -2,7 +2,7 @@
 import { ToOption, TConfig } from "./types/types.d"
 import { EventQueue } from "./event"
 import { applyPlugins, usePlugins } from "./plugin"
-export type { TPlugin } from './types/types'
+export * from './types/types'
 
 /** 解析路径参数 */
 function parse(url = ''): Record<any, any> {
@@ -157,4 +157,4 @@ export default to
 
 export const excute = EventQueue.excute
 
-export { usePlugins }
+export { usePlugins, to, $to }
