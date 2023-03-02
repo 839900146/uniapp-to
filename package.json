@@ -1,6 +1,6 @@
 {
   "name": "uniapp-to",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "基于uniapp的路由跳转封装，兼容微信/头条小程序、H5、APP",
   "main": "./dist/index.js",
   "exports": {

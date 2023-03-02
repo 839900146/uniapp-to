@@ -1,4 +1,3 @@
-import { App } from 'vue'
 import { $to, TPlugin, usePlugins } from './index'
 export default (plugins?: TPlugin[]) => {
 
@@ -7,7 +6,7 @@ export default (plugins?: TPlugin[]) => {
 	}
 	
 	return {
-		install(app: App) {
+		install(app: any) {
 			if (app.config?.globalProperties) {
 				app.config.globalProperties.$to = $to
 			} else {
