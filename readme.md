@@ -175,7 +175,7 @@ excute('b', 1, 2, 3)
 import { usePlugins, TPlugin } from 'uniapp-to'
 
 // 定义插件
-const myPlugin = (config: TPlugin) => {
+const myPlugin: TPlugin = (config) => {
     if (conf.url?.startsWith('/pages/demo')) {
         // 如果访问的路径是/pages/demo开头，则不跳转，而是刷新页面
         window.location.reload()
@@ -193,7 +193,7 @@ Vue.use(usePlugins([myPlugin]))
 type TPlugin = (config: TConfig) => boolean | Promise<(config: TConfig) => boolean>
 ```
 
-- 如果插件方法执行完毕后有返回值且为 `true`，则将不再执行内置的后续逻辑，也就是说，后续的跳转方法将必须由该插件自身实现
+- 如果插件方法执行完毕后有返回值且为`true`，则将不再执行内置的后续逻辑，也就是说，后续的跳转方法将必须由该插件自身实现
 
 
 ## 常见问题

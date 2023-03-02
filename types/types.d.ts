@@ -38,5 +38,3 @@ export type TConfig = {
 export type TPlugin = (config: TConfig) => boolean | Promise<(config: TConfig) => boolean>
 
 export const excute: typeof EventQueue.excute
-
-export {}
