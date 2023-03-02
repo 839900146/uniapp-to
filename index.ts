@@ -1,8 +1,39 @@
 // @ts-nocheck
-import { ToOption, TConfig } from "./types/types.d"
 import { EventQueue } from "./event"
-import { applyPlugins, usePlugins } from "./plugin"
-export * from './types/types'
+import { applyPlugins, usePlugins, TPlugin } from "./plugin"
+
+export type ToOption = Partial<{
+    /** id，可以是视频号id、小程序AppID */
+    id: string
+    /** 跳转微信小程序 */
+    miniPrograme: boolean
+    /** 回到上一个小程序 */
+    backPrograme: boolean
+    /** 退出小程序 */
+    exitPrograme: boolean
+    /** 跳转视频号主页 */
+    videoIndex: boolean
+    /** 等价于redirect */
+    replace: boolean,
+    /** 回退的页面数量 */
+    delta: number,
+    /** 等价于reLaunch */
+    clear: boolean,
+    /** 事件列表 */
+    events: Record<string, (...args: any[]) => any | Promise<(...args: any[]) => any>>,
+    /** 需要传递的参数 */
+    params: Record<any, any>,
+    /** 成功函数 */
+    success: () => any,
+    /** 失败函数 */
+    fail: (error: unknown) => any,
+    [propName: string]: any
+}>
+
+export type TConfig = {
+    url?: string
+    params: Record<any, any>
+} & ToOption
 
 /** 解析路径参数 */
 function parse(url = ''): Record<any, any> {
@@ -157,4 +188,4 @@ export default to
 
 export const excute = EventQueue.excute
 
-export { usePlugins, to, $to }
+export { usePlugins, TPlugin }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { App } from 'vue'
 import { $to, TPlugin, usePlugins } from './index'
 export default (plugins?: TPlugin[]) => {

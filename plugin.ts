@@ -1,4 +1,6 @@
-import { TPlugin, TConfig } from "./types/types"
+import type { TConfig } from "./index"
+
+export type TPlugin = (config: TConfig) => boolean | Promise<(config: TConfig) => boolean>
 
 const _plugins: TPlugin[] = []
 
